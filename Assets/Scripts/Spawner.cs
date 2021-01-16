@@ -21,9 +21,17 @@ public class Spawner : MonoBehaviour
             Enemy newEnemy = Instantiate(_enemies[Random.Range(0, _enemies.Length)], GetRandomPlaceInSphere(_spawnRadius), Quaternion.identity);
             Vector3 lookDirecton = _target.transform.position - newEnemy.transform.position;
             newEnemy.transform.rotation = Quaternion.LookRotation(lookDirecton);
+            newEnemy.Dying += OnEnemyDying;
 
             yield return new WaitForSeconds(_secondsBetweenSpawn);
         }
+    }
+
+    private void OnEnemyDying(Enemy enemy)
+    {
+        enemy.Dying -= OnEnemyDying;
+
+        _target.AddScore();
     }
 
     private Vector3 GetRandomPlaceInSphere(float radius)
